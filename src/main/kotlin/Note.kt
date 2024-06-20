@@ -4,10 +4,5 @@ open class Note(val name: String, val info:String) {
 
         return "СОДЕРЖИМОЕ ЗАМЕТКИ с названием: $name\n$info"
     }
-    fun nameF(){
-        println(name)
-    }
-    fun infoF(){
-        println(info)
-    }
+
 }
