@@ -15,6 +15,7 @@ class ArhiveCreate {
 
         if (command == -100) {
             println("Вы вышли из приложения")
+            break
         }
         if (command == 0) {
             val archiveName=nameInput("Введите название архива: ")
