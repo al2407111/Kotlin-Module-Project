@@ -9,16 +9,4 @@ class Archive(val name:String) {
     }
 
 
-    fun caseNote(){
-        println("СОЗДАНИЕ ЗАМЕТКИ\n" +
-                "Введите номер заметки либо \n0 - Создать заметку ")
-        for (i in 0..noteList.size - 1) {
-            println("${i + 1} - ${noteList.get(i).name}")
-        }
-        println("${noteList.size + 1} - Выход")
-    }
-
-    fun noteListSize():Int{
-        return noteList.size
-    }
 }

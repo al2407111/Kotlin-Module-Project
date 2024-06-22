@@ -3,13 +3,11 @@ import java.util.Scanner
 class ArhiveCreate {
     val archiveList = mutableListOf<Archive>()
     private var scanner = Scanner(System.`in`)
-
+    var noteList: MutableList<Note> = mutableListOf()
     fun printMenu() {
         while (true){
-            println("СОЗДАНИЕ АРХИВА\nВведите номер архива либо \n0 - Создать архив ")
-            for (i in 0..archiveList.size - 1) {
-                println("${i + 1} - ${archiveList.get(i)}")}
-            println("${archiveList.size + 1} - Выход")
+
+getSize(archiveList,"СОЗДАНИЕ АРХИВА\nВведите номер архива либо \n0 - Создать архив ")
 
         val command = switch(archiveList.size)
 
@@ -26,8 +24,10 @@ class ArhiveCreate {
         } else {
             while (true){
             val archive = archiveList[command - 1]
-                   archive.caseNote()
-             val commandNote=switch(archive.noteListSize())
+                noteList=archive.noteList
+
+getSize(noteList,"СОЗДАНИЕ ЗАМЕТКИ\nВведите номер заметки либо \n0 - Создать заметку ")
+             val commandNote=switch(noteList.size)
             when(commandNote) {
                 0 -> {
                     val noteName = nameInput("Введите заголовок заметки: ")
@@ -37,13 +37,18 @@ class ArhiveCreate {
 
                 -100->break
 
-                else->println(archive.noteList[commandNote-1])
+                else->println(noteList[commandNote-1].infoOut())
             }
             }
         }
     }
 
             }
+
+
+
+
+
     fun nameInput(string: String): String {
         while (true) {
             println(string)
@@ -89,6 +94,12 @@ class ArhiveCreate {
             }
         }
         return command.toInt()
+    }
+    fun <T> getSize(t: MutableList<T>,string: String) {
+        println(string)
+        for (i in 0..t.size-1){
+            println("${i + 1} - ${t.get(i)}")}
+        println("${t.size + 1} - Выход")
     }
         }
 
