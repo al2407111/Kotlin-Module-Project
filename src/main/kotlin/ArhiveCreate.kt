@@ -1,44 +1,83 @@
-class ArhiveCreate:Menu() {
-    var archiveCreate = Menu(
+import java.util.Scanner
 
-        "СОЗДАНИЕ АРХИВА\n" +
-                "Введите номер архива либо \n0 - Создать архив "
-    )
-    var noteCreate = Menu(
-
-        "ВЫБОР ЗАМЕТКИ"
-
-    )
-    private val archiveList:  MutableList<Arhive> = mutableListOf()
-
+class ArhiveCreate {
+    val archiveList = mutableListOf<Archive>()
+    private var scanner = Scanner(System.`in`)
+    var noteList: MutableList<Note> = mutableListOf()
     fun printMenu() {
+        while (true){
 
-        while (true) {
-//
-            println(archiveCreate.menuText)
+            getSize(archiveList,"СОЗДАНИЕ АРХИВА\nВведите номер архива либо \n0 - Создать архив ")
 
-            for (i in 0..archiveList.size - 1) {
-                println("${i + 1} - ${archiveList.get(i)}")
-            }
+            val command = switch(archiveList.size)
 
-            println("${archiveList.size + 1} - Выход")
-            val command=getCommand()
-
-            if(!isInt(command)) {
-                println("Ошибка: надо ввести целое число!")
-                continue}
-            if (command.toInt() == archiveList.size + 1) {
+            if (command == -100) {
                 println("Вы вышли из приложения")
                 break
             }
-            if (command == "0"){
-                println("Название архива")
-                val archiveName=getCommand()
-                archiveList.add(archiveList.size , Arhive(archiveName))
+            if (command == 0) {
+                val archiveName=nameInput("Введите название архива: ")
+                val newArhive =Archive(name=archiveName)
+                archiveList.add(newArhive)
                 println("Архив добавлен: $archiveName")
-                continue
+
+            } else {
+                while (true){
+                    val archive = archiveList[command - 1]
+                    noteList=archive.noteList
+
+                    getSize(noteList,"СОЗДАНИЕ ЗАМЕТКИ\nВведите номер заметки либо \n0 - Создать заметку ")
+                    val commandNote=switch(noteList.size)
+                    when(commandNote) {
+                        0 -> {
+                            val noteName = nameInput("Введите заголовок заметки: ")
+                            val noteInfo = nameInput("Введите содержание заметки: ")
+                            archive.addNote(Note(noteName, noteInfo))
+                            println("Заметка добавлена: $noteName") }
+
+                        -100->break
+
+                        else->println(noteList[commandNote-1].infoOut())
+                    }
+                }
             }
-            if(command.toInt() > (archiveList.size +1)) {
+        }
+
+    }
+
+
+
+
+
+    fun nameInput(string: String): String {
+        while (true) {
+            println(string)
+            val name=getCommand()
+            if (name.isNotEmpty()) {
+                return name
+            } else {
+                println("Некорректный ввод, попробуйте снова.")
+            }
+        }
+    }
+    fun isInt(str: String) = try {
+        str.toInt()
+        true
+    } catch (e: NumberFormatException) {
+        false
+    }
+    open fun getCommand(): String {
+        return scanner.nextLine()
+    }
+
+    fun switch(size:Int):Int{
+        var command=""
+        while (true) {
+            command=getCommand()
+            if(!isInt(command)) {
+                println("Ошибка: надо ввести целое число!")
+                continue}
+            if(command.toInt() > (size +1)) {
                 println("Ошибка: такого пункта меню нет. Попробуйте еще раз!")
                 continue
             }
@@ -46,56 +85,20 @@ class ArhiveCreate:Menu() {
                 println("Ошибка: число должно быть целым положительным!")
                 continue
             }
-            else{
-
-
-                while (true){
-                    val archive = archiveList[command.toInt() - 1]
-                    archive.caseNote()
-                    val commandNote=getCommand()
-                    if(!isInt(commandNote)) {
-                        println("Ошибка: надо ввести целое число!")
-                        continue}
-                    if (commandNote.toInt() == archive.noteListSize() + 1) {
-                        break
-                    }
-                    if (commandNote == "0") {
-                        println("Название заметки")
-                        val noteName = getCommand()
-                        println("Содержание заметки")
-                        val noteInfo = getCommand()
-                        archive.addNote(Note(noteName, noteInfo))
-                        println("Заметка добавлена: $noteName")
-                        continue
-                    }
-
-                    if(commandNote.toInt() > (archive.noteListSize() +1)) {
-                        println("Ошибка: такого пункта меню нет. Попробуйте еще раз!")
-                        continue
-                    }
-                    if(commandNote.toInt() <0) {
-                        println("Ошибка: число должно быть целым положительным!")
-                        continue
-                    }
-                    else {
-                        println(archive.noteList[commandNote.toInt()-1])
-                    }
-
-                }
-                continue
-
-
+            if (command.toInt() == size + 1) {
+                return -100
+                break
+            }
+            else {
+                break
             }
         }
-        fun getCommand(): String {
-            return super.getCommand()
-        }
+        return command.toInt()
     }
-
-}
-fun isInt(str: String) = try {
-    str.toInt()
-    true
-} catch (e: NumberFormatException) {
-    false
+    fun <T> getSize(t: MutableList<T>,string: String) {
+        println(string)
+        for (i in 0..t.size-1){
+            println("${i + 1} - ${t.get(i)}")}
+        println("${t.size + 1} - Выход")
+    }
 }
